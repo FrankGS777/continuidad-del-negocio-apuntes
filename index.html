@@ -60,7 +60,15 @@ function updateIndex() {
   if (active !== current) {
     current?.removeAttribute('aria-current');
     active.setAttribute('aria-current', 'location');
-    current = active; const nav = active.closest('nav'); if (getComputedStyle(nav).position === 'sticky') { const top = active.offsetTop - nav.offsetTop; if (top < nav.scrollTop || top + active.offsetHeight > nav.scrollTop + nav.clientHeight) nav.scrollTop = Math.max(0, top - nav.clientHeight * .3); }
+    current = active;
+    const nav = active.closest('nav');
+    if (getComputedStyle(nav).position === 'sticky') {
+      const item = active.getBoundingClientRect();
+      const panel = nav.getBoundingClientRect();
+      if (item.top < panel.top || item.bottom > panel.bottom) {
+        nav.scrollTop += item.top - panel.top - nav.clientHeight * .3;
+      }
+    }
   }
 }
 function queueUpdate() {
